@@ -36,7 +36,7 @@ static int on_connect_request(struct rdma_cm_id *id, struct rdma_conn_param *par
 	return 0;
 }
 
-static int on_connection(struct queue *q)
+static int on_connection_server(struct queue *q)
 {
 //	printf("%s: s_queue_ctr = %d\n", __func__, s_queue_ctr);
 //
@@ -84,7 +84,7 @@ static int on_event(struct rdma_cm_event *event)
 		case RDMA_CM_EVENT_CONNECT_REQUEST:
 			return on_connect_request(event->id, &event->param.conn);
 		case RDMA_CM_EVENT_ESTABLISHED:
-			return on_connection(q);
+			return on_connection_server(q);
 		case RDMA_CM_EVENT_DISCONNECTED:
 			return on_disconnect(q);
 		case RDMA_CM_EVENT_REJECTED:

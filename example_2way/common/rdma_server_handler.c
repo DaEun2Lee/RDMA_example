@@ -32,7 +32,8 @@ static void *process_receiver(void *arg)
 //      for (int i = 0; i < 100; i++) {
         while(true){
 //              printf("%s: recv %d on %d!\n", __func__, i, cpu);
-                rdma_recv_wr(q, &q->ctrl->servermr);
+                rdma_recv_wr(q, &q->ctrl->clientmr);
+//		rdma_recv_wr(q, &q->ctrl->servermr);
                 rdma_poll_cq(q->cq, 1);
 //              printf("%s: done %d on %d!\n", __func__, i, cpu);
 

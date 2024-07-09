@@ -107,13 +107,16 @@ int rdma_create_queue(struct queue *q, struct ibv_comp_channel *cc)
 	TEST_NZ((q->cq == NULL));
 	TEST_NZ(ibv_req_notify_cq(q->cq, 0));
 
-    qp_attr.send_cq = q->cq;
-    qp_attr.recv_cq = q->cq;
-    qp_attr.qp_type = IBV_QPT_RC;
-    qp_attr.cap.max_send_wr = MAX_SGE;
-    qp_attr.cap.max_recv_wr = MAX_SGE;
-    qp_attr.cap.max_send_sge = MAX_WR;
-    qp_attr.cap.max_recv_sge = MAX_WR;
+	//@delee
+	//TODO
+	// change queue
+	qp_attr.send_cq = q->cq;
+	qp_attr.recv_cq = q->cq;
+	qp_attr.qp_type = IBV_QPT_RC;
+	qp_attr.cap.max_send_wr = MAX_SGE;
+	qp_attr.cap.max_recv_wr = MAX_SGE;
+	qp_attr.cap.max_send_sge = MAX_WR;
+	qp_attr.cap.max_recv_sge = MAX_WR;
 
     ret = rdma_create_qp(q->cm_id, q->ctrl->dev->pd, &qp_attr);
     if (ret) {

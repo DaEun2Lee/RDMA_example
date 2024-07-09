@@ -42,7 +42,7 @@ static int on_route_resolved(struct queue *q)
 	return 0;
 }
 
-static int on_connection(struct queue *q)
+static int on_connection_client(struct queue *q)
 {
 	struct mr_attr mr;
 
@@ -75,7 +75,7 @@ static int on_event(struct rdma_cm_event *event)
 		case RDMA_CM_EVENT_ROUTE_RESOLVED:
 			return on_route_resolved(q);
 		case RDMA_CM_EVENT_ESTABLISHED:
-			return on_connection(q);
+			return on_connection_client(q);
 		case RDMA_CM_EVENT_REJECTED:
 			printf("%s: RDMA_CM_EVENT_REJECTD\n", __func__);
 			return 1;
