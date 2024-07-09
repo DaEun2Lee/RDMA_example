@@ -50,9 +50,12 @@ static int on_connection_server(struct queue *q)
         mr.stag.lkey = server_mr->lkey;
         memcpy(server_memory, &mr, sizeof(struct mr_attr));
 
+	//@delee
+	//TODO
+	//This line causes an error.
         TEST_NZ(rdma_send_wr(q, IBV_WR_SEND, &mr, NULL));
         TEST_NZ(rdma_poll_cq(q->cq, 1));
-
+ 
         q->ctrl->servermr.addr = (uint64_t) server_mr->addr;
         q->ctrl->servermr.length = sizeof(struct mr_attr);
         q->ctrl->servermr.stag.lkey = server_mr->lkey;
