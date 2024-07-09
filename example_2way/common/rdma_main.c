@@ -40,6 +40,8 @@ int main(int argc, char* argv[])
 				s_addr.sin_port = htons(strtol(optarg, NULL, 0));
 				c_addr.sin_port = s_addr.sin_port;
 				break;
+			//@delee
+			//'P' is a client port.
 			case 'P':
                                 c_addr.sin_port = htons(strtol(optarg, NULL, 0));
                                 break;
