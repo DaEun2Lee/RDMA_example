@@ -1,17 +1,13 @@
 .PHONY: clean
 
-# Makefile for RDMA Server Program
-
-CC := g++
 CFLAGS := -Wall -g -ggdb -Werror
-LDLIBS := -lrdmacm -libverbs -lpthread
+LDLIBS := ${LDLIBS} -lrdmacm -libverbs -lpthread
+CC := g++
 
-APP := rdma_server
+APP := rdma_e
 
-
-$(APP): rdma_common.h rdma_server.c rdma_e.cpp
-	$(CC) $(CFLAGS) -o $(APP) rdma_server.c -DACN_RDMA_DEBUG $(LDLIBS)
-default: $(APP)
+default: rdma_e.c
+	${CC} -o ${APP} $^ -DACN_RDMA_DEBUG ${LDLIBS}
 
 clean:
-	rm -f $(APP)
+	rm -f ${APP}
