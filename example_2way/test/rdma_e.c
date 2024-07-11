@@ -141,10 +141,10 @@ void rdma_setup(const char *ip, int port, bool is_server) {
         struct ibv_qp_attr qp_attr = {};
         qp_attr.qp_state = IBV_QPS_INIT;
         qp_attr.pkey_index = 0;
-        qp_attr.port_num = 1;  // Assuming port 1
+        qp_attr.port_num = port;  // Assuming port 1
 
         if (ibv_modify_qp(ctx.qp, &qp_attr, IBV_QP_STATE | IBV_QP_PKEY_INDEX | IBV_QP_PORT))
-            die("Failed to transition QP to INIT state");
+//            die("Failed to transition QP to INIT state");
 
         qp_attr.qp_state = IBV_QPS_RTR;  // Ready to Receive
         if (ibv_modify_qp(ctx.qp, &qp_attr, IBV_QP_STATE))
@@ -211,12 +211,12 @@ int main(int argc, char *argv[]) {
 
     rdma_setup(ip.c_str(), port, true);  // Start as server
 
-    // Start a client thread to send data
-    std::thread client_thread([](const std::string &ip, int port){
-        rdma_setup(ip.c_str(), port, false);  // Start as client
-    }, ip, port);
-
-    client_thread.join(); // Wait for the client thread to finish
+//    // Start a client thread to send data
+//    std::thread client_thread([](const std::string &ip, int port){
+//        rdma_setup(ip.c_str(), port, false);  // Start as client
+//    }, ip, port);
+//
+//    client_thread.join(); // Wait for the client thread to finish
 
     // Clean up
     if (ctx.qp) {
