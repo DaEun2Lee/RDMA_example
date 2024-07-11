@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 	print_sockaddr_in(&c_addr);
 	server_handler();
 	sleep(2);
-	client_handler();
+//	client_handler();
 //	pthread_create(&s_handler, NULL, server_handler, NULL);
 //	printf("%s: pthread_create-server_handler\n", __func__);
 //	sleep(60);
