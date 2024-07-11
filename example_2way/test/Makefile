@@ -1,43 +1,17 @@
+.PHONY: clean
+
 # Makefile for RDMA Server Program
 
-# Compiler
-CC = gcc
+CC := g++
+CFLAGS := -Wall -g -ggdb -Werror
+LDLIBS := -lrdmacm -libverbs -lpthread
 
-# Compiler flags
-CFLAGS = -Wall -g
+APP := rdma_server
 
-# Include directories
-INCLUDES = -I.
 
-# Libraries
-LIBS = -lrdmacm -libverbs -lpthread
+$(APP): rdma_common.h rdma_server.c rdma_e.cpp
+	$(CC) $(CFLAGS) -o $(APP) rdma_server.c -DACN_RDMA_DEBUG $(LDLIBS)
+default: $(APP)
 
-# Source files
-SRCS = rdma_server.c
-
-# Header files
-HDRS = rdma_common.h
-
-# Object files
-OBJS = $(SRCS:.c=.o)
-
-# Executable file
-TARGET = rdma_server
-
-# Default target
-all: $(TARGET)
-
-# Link the object files to create the executable
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
-
-# Compile source files into object files
-%.o: %.c $(HDRS)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-# Clean up build files
 clean:
-	rm -f $(OBJS) $(TARGET)
-
-# Phony targets
-.PHONY: all clean
+	rm -f $(APP)
