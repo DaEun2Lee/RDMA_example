@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 		printf("%s: Failed to create pthread_create-server_handler\n", __func__);
 		return 1;
 	}
-
+	sleep(30);
 	if (pthread_create(&c_handler, NULL, client_handler, NULL) != 0) {
 		printf("%s: Failed to create pthread_create-client_handler\n", __func__);
 	}

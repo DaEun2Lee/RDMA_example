@@ -59,7 +59,7 @@ static int on_connection_client(struct queue *q)
 	mr.stag.lkey = client_mr->lkey;
 	memcpy(client_memory, &mr, sizeof(struct mr_attr));
 	
-	TEST_NZ(rdma_recv_wr(&client_session->queues[c_queue_ctr-1], &mr));
+	TEST_NZ(rdma_recv_wr(&client_session->queues[c_queue_ctr--], &mr));
 	TEST_NZ(rdma_poll_cq(client_session->queues[c_queue_ctr-1].cq, 1));
 	return 1;
 }
