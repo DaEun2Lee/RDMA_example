@@ -10,7 +10,6 @@ extern struct sockaddr_in c_addr;
 pthread_t s_handler;
 pthread_t c_handler;
 
-
 static inline int get_addr(char *sip)
 {
 	struct addrinfo *info;
@@ -59,13 +58,20 @@ int main(int argc, char* argv[])
 	print_sockaddr_in(&c_addr);
 //	server_handler();
 //	sleep(2);
-	client_handler();
-//	pthread_create(&s_handler, NULL, server_handler, NULL);
+//	client_handler();
+	if (pthread_create(&s_handler, NULL, server_handler, NULL) != 0) {
+		printf("%s: Failed to create pthread_create-server_handler\n", __func__);
+		return 1;
+	}
+
+	if (pthread_create(&c_handler, NULL, client_handler, NULL) != 0) {
+		printf("%s: Failed to create pthread_create-client_handler\n", __func__);
+	}
 //	printf("%s: pthread_create-server_handler\n", __func__);
 //	sleep(60);
- 	pthread_create(&c_handler, NULL, client_handler, NULL);
-	printf("%s: pthread_create-client_handler\n", __func__);
-//	pthread_join(s_handler, NULL);
+// 	pthread_create(&c_handler, NULL, client_handler, NULL);
+//	printf("%s: pthread_create-client_handler\n", __func__);
+	pthread_join(s_handler, NULL);
 //	sleep(5);
 	pthread_join(c_handler, NULL);
 
