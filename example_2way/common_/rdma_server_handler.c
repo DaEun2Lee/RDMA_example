@@ -12,8 +12,8 @@ int rdma_server_status;
 atomic_int wr_check[100];
 
 
-static void *process_server_init(void *arg)
-//static void *process_server_init()
+//static void *process_server_init(void *arg)
+static void *process_server_init()
 {
         rdma_server_status = RDMA_INIT;
         start_rdma_server(s_addr);
@@ -27,7 +27,9 @@ static void *process_receiver(void *arg)
         struct queue *q = get_queue_server(0);
 //
         int cnt = 0;
-	int i = 0;
+//      printf("%s: start on %d\n", __func__, cpu);
+
+//      for (int i = 0; i < 100; i++) {
         while(true){
 //              printf("%s: recv %d on %d!\n", __func__, i, cpu);
                 rdma_recv_wr(q, &q->ctrl->clientmr);
@@ -37,9 +39,6 @@ static void *process_receiver(void *arg)
 
                 atomic_fetch_add(&wr_check[cnt], 1);
                 cnt++;
-		i++;
-		if (i >= 100)
-			break;
         }
 }
 

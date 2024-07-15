@@ -34,22 +34,13 @@ static void *simulator(void *arg)
 		}
         }
 	printf("%s: end of while \n", __func__);
-	
-      rdma_client_status = RDMA_DISCONNECT;
-}
 
-//static inline int get_addr(char *sip)
-//{
-//        struct addrinfo *info;
-//
-//        TEST_NZ(getaddrinfo(sip, NULL, NULL, &info));
-//        memcpy(&s_addr, info->ai_addr, sizeof(struct sockaddr_in));
-//        freeaddrinfo(info);
-//        return 0;
-//}
+	rdma_client_status = RDMA_DISCONNECT;
+}
 
 void *client_handler()
 {
+	sleep(100);
 	pthread_create(&client_init, NULL, process_client_init, NULL);
 	while (rdma_client_status != RDMA_CONNECT);
 	printf("The client is connected successfully\n");

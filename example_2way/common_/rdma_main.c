@@ -57,17 +57,17 @@ int main(int argc, char* argv[])
 	print_sockaddr_in(&s_addr);
 	printf("c_addr\n");
 	print_sockaddr_in(&c_addr);
-	server_handler();
-	sleep(2);
-//	client_handler();
+//	server_handler();
+//	sleep(2);
+	client_handler();
 //	pthread_create(&s_handler, NULL, server_handler, NULL);
 //	printf("%s: pthread_create-server_handler\n", __func__);
 //	sleep(60);
-// 	pthread_create(&c_handler, NULL, client_handler, NULL);
-//	printf("%s: pthread_create-client_handler\n", __func__);
+ 	pthread_create(&c_handler, NULL, client_handler, NULL);
+	printf("%s: pthread_create-client_handler\n", __func__);
 //	pthread_join(s_handler, NULL);
 //	sleep(5);
-//	pthread_join(c_handler, NULL);
+	pthread_join(c_handler, NULL);
 
 	return 0;
 }

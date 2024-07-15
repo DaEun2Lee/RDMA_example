@@ -59,19 +59,20 @@ int main(int argc, char* argv[])
 //	server_handler();
 //	sleep(2);
 //	client_handler();
-	if (pthread_create(&s_handler, NULL, server_handler, NULL) != 0) {
-		printf("%s: Failed to create pthread_create-server_handler\n", __func__);
-		return 1;
-	}
-	sleep(30);
+//	if (pthread_create(&s_handler, NULL, server_handler, NULL) != 0) {
+//		printf("%s: Failed to create pthread_create-server_handler\n", __func__);
+//		return 1;
+//	}
+//	printf("%s: pthread_create-server_handler\n", __func__);
+//	sleep(30);
 	if (pthread_create(&c_handler, NULL, client_handler, NULL) != 0) {
 		printf("%s: Failed to create pthread_create-client_handler\n", __func__);
 	}
-//	printf("%s: pthread_create-server_handler\n", __func__);
-//	sleep(60);
-// 	pthread_create(&c_handler, NULL, client_handler, NULL);
-//	printf("%s: pthread_create-client_handler\n", __func__);
-	pthread_join(s_handler, NULL);
+	printf("%s: pthread_create-client_handler\n", __func__);
+
+	server_handler();
+
+//	pthread_join(s_handler, NULL);
 //	sleep(5);
 	pthread_join(c_handler, NULL);
 

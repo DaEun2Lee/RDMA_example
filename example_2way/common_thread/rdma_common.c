@@ -207,12 +207,12 @@ int rdma_recv_wr(struct queue *q, struct mr_attr *sge_mr)
     	struct ibv_sge sge;
     	int ret;
 
-	bzero(&sge, sizeof(sge));
+//	bzero(&sge, sizeof(sge));
 	sge.addr = sge_mr->addr;
 	sge.length = sge_mr->length;
 	sge.lkey = sge_mr->stag.lkey;
 
-	bzero(&wr, sizeof(wr));
+//	bzero(&wr, sizeof(wr));
 	wr.sg_list = &sge;
 	wr.num_sge = 1;
 //

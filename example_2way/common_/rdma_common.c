@@ -81,6 +81,10 @@ int rdma_create_queue(struct queue *q, struct ibv_comp_channel *cc)
 
 	if (!cc) {
 		cc = ibv_create_comp_channel(q->cm_id->verbs);
+//		if (!cc) {
+//			printf("%s: ibv_create_comp_channel failed\n", __func__);
+//			return -EINVAL;
+//		}
 		TEST_NZ((cc == NULL));
 	}
 
@@ -114,14 +118,14 @@ int rdma_create_queue(struct queue *q, struct ibv_comp_channel *cc)
 	qp_attr.cap.max_send_sge = MAX_WR;
 	qp_attr.cap.max_recv_sge = MAX_WR;
 
-	ret = rdma_create_qp(q->cm_id, q->ctrl->dev->pd, &qp_attr);
-	if (ret) {
-		printf("%s: rdma_create_qp failed\n", __func__);
-		return ret;
-	}
+    ret = rdma_create_qp(q->cm_id, q->ctrl->dev->pd, &qp_attr);
+    if (ret) {
+        printf("%s: rdma_create_qp failed\n", __func__);
+        return ret;
+    }
 
 //	TEST_NZ(rdma_create_qp(q->cm_id, q->ctrl->dev->pd, &qp_attr));
-	q->qp = q->cm_id->qp;
+    q->qp = q->cm_id->qp;
 
 	return ret;
 }
@@ -203,12 +207,12 @@ int rdma_recv_wr(struct queue *q, struct mr_attr *sge_mr)
     	struct ibv_sge sge;
     	int ret;
 
-//	bzero(&sge, sizeof(sge));
+	bzero(&sge, sizeof(sge));
 	sge.addr = sge_mr->addr;
 	sge.length = sge_mr->length;
 	sge.lkey = sge_mr->stag.lkey;
 
-//	bzero(&wr, sizeof(wr));
+	bzero(&wr, sizeof(wr));
 	wr.sg_list = &sge;
 	wr.num_sge = 1;
 //
