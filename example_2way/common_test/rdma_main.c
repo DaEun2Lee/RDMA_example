@@ -3,6 +3,7 @@
 #include "rdma_client_handler.h"
 #include "rdma_server.h"
 #include "rdma_server_handler.h"
+#include <time.h>
 
 extern struct sockaddr_in s_addr;
 extern struct sockaddr_in c_addr;
@@ -29,6 +30,13 @@ static void usage(void)
 
 int main(int argc, char* argv[])
 {
+
+	//@delee
+	//for time measurement
+	clock_t start, end;
+	double cpu_time_used;
+	FILE *file;
+
 	int option;
 
 	while ((option = getopt(argc, argv, "i:p:P:")) != -1) {
@@ -57,17 +65,38 @@ int main(int argc, char* argv[])
 	print_sockaddr_in(&s_addr);
 	printf("c_addr\n");
 	print_sockaddr_in(&c_addr);
-//	server_handler();
+
+	server_handler();
 //	sleep(2);
-	client_handler();
+
+//	start = clock();
+//	client_handler();
+	end = clock();
+//
 //	pthread_create(&s_handler, NULL, server_handler, NULL);
 //	printf("%s: pthread_create-server_handler\n", __func__);
 //	sleep(60);
- 	pthread_create(&c_handler, NULL, client_handler, NULL);
-	printf("%s: pthread_create-client_handler\n", __func__);
+// 	pthread_create(&c_handler, NULL, client_handler, NULL);
+//	printf("%s: pthread_create-client_handler\n", __func__);
 //	pthread_join(s_handler, NULL);
 //	sleep(5);
-	pthread_join(c_handler, NULL);
+//	pthread_join(c_handler, NULL);
+//	end = clock();
+
+
+	//@delee
+	// Caculate time
+//	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+//	file = fopen("time.txt", "w");
+//	if (file == NULL) {
+//		perror("Failed to open file");
+////		return 1;
+//	}
+//	fprintf(file, "Start time: %ld\n", start);
+//	fprintf(file, "End time: %ld\n", end);
+//	fprintf(file, "CPU time used: %f seconds\n", cpu_time_used);
+//	fclose(file);
+//	printf("The function took %f seconds to execute. Check time.txt for details.\n", cpu_time_used);
 
 	return 0;
 }

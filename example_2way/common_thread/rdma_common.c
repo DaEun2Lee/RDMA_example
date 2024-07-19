@@ -1,4 +1,7 @@
+
 #include "rdma_common.h"
+#include "common.h"
+
 
 //#ifdef RDMA_CLIENT
 //const unsigned int MAX_SGE = 1024;
@@ -41,7 +44,7 @@ int rdma_alloc_session(struct ctrl **session)
     (*session)->queues = (struct queue *) malloc(sizeof(struct queue) * NUM_QUEUES);    
 	if (!(*session)->queues) {
         printf("%s: malloc queues failed\n", __func__);
-	return -EINVAL;
+ 	return -EINVAL;
     }
     memset((*session)->queues, 0, sizeof(struct queue) * NUM_QUEUES);
 
@@ -70,7 +73,8 @@ int rdma_create_device(struct queue *q)
     }
 
     q->ctrl->dev = dev;
-
+	printf("%s: ",__func__);
+	print_queue(q);
 	return 0;
 }
 
@@ -127,6 +131,10 @@ int rdma_create_queue(struct queue *q, struct ibv_comp_channel *cc)
 //	TEST_NZ(rdma_create_qp(q->cm_id, q->ctrl->dev->pd, &qp_attr));
     q->qp = q->cm_id->qp;
 
+
+	        printf("%s: ",__func__);
+        print_queue(q);
+
 	return ret;
 }
 
@@ -141,6 +149,9 @@ int rdma_modify_qp(struct queue *q)
 		printf("%s: ibv_modify_qp failed \n", __func__);
 		return 1;
 	}
+
+        printf("%s: ",__func__);
+        print_queue(q);
 
 	return 0;
 }
@@ -216,12 +227,16 @@ int rdma_recv_wr(struct queue *q, struct mr_attr *sge_mr)
 	wr.sg_list = &sge;
 	wr.num_sge = 1;
 //
-//    	ret = ibv_post_recv(q->qp, &wr, &bad_wr);
-//    	if (ret) {
-//        	printf("%s: ib_post_recv failed\n", __func__);
-//        	return ret;
-//    	}
-	TEST_NZ(ibv_post_recv(q->qp, &wr, &bad_wr));
+    	ret = ibv_post_recv(q->qp, &wr, &bad_wr);
+    	if (ret) {
+        	printf("%s: ib_post_recv failed\n", __func__);
+        	return ret;
+    	}
+//	TEST_NZ(ibv_post_recv(q->qp, &wr, &bad_wr));
+
+
+        printf("%s: ",__func__);
+        print_queue(q);
 
 	return ret;
 }
@@ -233,6 +248,9 @@ int rdma_send_wr(struct queue *q, enum ibv_wr_opcode opcode,
 	struct ibv_send_wr wr = {};
 	struct ibv_sge sge = {};
 	int ret;
+
+        printf("%s: ",__func__);
+        print_queue(q);
 
 //	bzero(&sge, sizeof(sge));
 	sge.addr = sge_mr->addr;
@@ -249,12 +267,48 @@ int rdma_send_wr(struct queue *q, enum ibv_wr_opcode opcode,
 		wr.wr.rdma.rkey = wr_mr->stag.rkey;
 	}
 
-//	ret = ibv_post_send(q->qp, &wr, &bad_wr);
-//	if (ret) {
-//		printf("%s: ibv_post_send failed\n", __func__);
-//		return ret;
-//	}
+	ret = ibv_post_send(q->qp, &wr, &bad_wr);
+	if (ret) {
+		printf("%s: ibv_post_send failed\n", __func__);
+		return ret;
+	}
 
-	TEST_NZ(ibv_post_send(q->qp, &wr, &bad_wr));
+//	TEST_NZ(ibv_post_send(q->qp, &wr, &bad_wr));
 	return ret;
+}
+
+void print_queue(struct queue *q)
+{
+	printf("%s: Queue contents:\n", __func__);
+	printf("%s: qp: %p\n", __func__, q->qp);
+	printf("%s: cq: %p\n",  __func__, q->cq);
+	printf("%s: cm_id: %p\n",  __func__, q->cm_id);
+	printf("%s: ctrl: %p\n",  __func__, q->ctrl);
+}
+
+void print_ctrl(struct ctrl *ctr)
+{
+//	printf("%s: ctrl contents: \n", __func__);
+//	if(&ctr->queues ! = NULL)
+//		printf("%s: queque: %s/n", __func__, &ctr->queues);
+//	else
+//		printf("%s: queue is NULL", __func__);
+//	if(ctr->mr_buffer != NULL)
+//		printf("%s: mr_buffer: %p/n", __func__, ctr->mr_buffer);
+//	else
+//		 printf("%s: mr_buffer is NULL", __func__);
+//	if(ctr->buffer != NULL)
+//		printf("%s: buffer: %p/n", __func__, ctr->buffer);
+//	else
+//		printf("%s: buffer is NULL", __func__);
+//	if(ctr->dev != NULL)
+//		printf("%s: dev: %p/n", __func__, ctr->dev);
+//	else
+//		printf("%s: dev is NULL", __func__);
+//
+//	if(ctr->comp_channel != NULL)
+//		printf("%s: comp_channel: %p/n", __func__, ctr->comp_channel);
+//	else
+//		printf("%s: comp_channel is NULL", __func__);
+//	continue;
 }

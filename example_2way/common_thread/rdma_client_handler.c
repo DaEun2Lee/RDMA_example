@@ -23,7 +23,12 @@ static void *simulator(void *arg)
 	int i = 0;
 	while(true){
 		printf("%s: req %d\n", __func__, i);
-                rdma_send_wr(q, IBV_WR_SEND, &q->ctrl->servermr, NULL);
+		//@delee
+		//TODO
+		//Check '&q->ctrl->servermr'
+//                rdma_send_wr(q, IBV_WR_SEND, &q->ctrl->servermr, NULL);
+		rdma_send_wr(q, IBV_WR_SEND, &q->ctrl->clientmr, NULL);
+		printf("%s: &q->ctrl->servermr %p\n", __func__, &q->ctrl->servermr);
 		printf("%s: rdma_send_wr on %d\n", __func__, i);
                 rdma_poll_cq(q->cq, 1);
                 printf("%s: %d done\n", __func__, i);
@@ -40,10 +45,11 @@ static void *simulator(void *arg)
 
 void *client_handler()
 {
-	sleep(100);
+//	sleep(100);
 	pthread_create(&client_init, NULL, process_client_init, NULL);
+	printf("%s: Waiting for client is connected\n", __func__);
 	while (rdma_client_status != RDMA_CONNECT);
-	printf("The client is connected successfully\n");
+	printf("%s: The client is connected successfully\n", __func__);
 
 	sleep(2);
 

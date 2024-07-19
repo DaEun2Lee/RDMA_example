@@ -84,7 +84,7 @@ struct ctrl {
 int rdma_alloc_session(struct ctrl **session);
 int rdma_create_device(struct queue *q);
 int rdma_create_queue(struct queue *q, struct ibv_comp_channel *cc);
-//int rdma_modify_qp(struct queue *q);
+int rdma_modify_qp(struct queue *q);
 int rdma_server_create_mr(struct ibv_pd *pd);
 int rdma_client_create_mr(struct ibv_pd *pd);
 
@@ -93,4 +93,5 @@ int rdma_recv_wr(struct queue *q, struct mr_attr *sge_mr);
 int rdma_send_wr(struct queue *q, enum ibv_wr_opcode opcode,
 		struct mr_attr *sge_mr, struct mr_attr *wr_mr);
 void print_sockaddr_in(const struct sockaddr_in *addr);
+void print_queue(struct queue *q);
 #endif

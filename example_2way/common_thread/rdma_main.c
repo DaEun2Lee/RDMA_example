@@ -70,11 +70,13 @@ int main(int argc, char* argv[])
 	}
 	printf("%s: pthread_create-client_handler\n", __func__);
 
-	server_handler();
+//	server_handler();
 
 //	pthread_join(s_handler, NULL);
-//	sleep(5);
+	sleep(5);
 	pthread_join(c_handler, NULL);
+//	server_handler();
+
 
 	return 0;
 }

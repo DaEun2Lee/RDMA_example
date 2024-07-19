@@ -14,7 +14,7 @@ extern int rdma_client_status;
 static int on_addr_resolved(struct rdma_cm_id *id)
 {
 	struct queue *q = &client_session->queues[c_queue_ctr];
-	printf("%s\n", __func__);
+//	printf("%s\n", __func__);
 
 	id->context = q;
 	q->cm_id = id;
@@ -31,7 +31,7 @@ static int on_route_resolved(struct queue *q)
 {
 	struct rdma_conn_param param = {};
 
-	printf("%s\n", __func__);
+//	printf("%s\n", __func__);
 
 	param.qp_num = q->qp->qp_num;
 	param.initiator_depth = 16;
@@ -50,7 +50,7 @@ static int on_connection_client(struct queue *q)
 //	if (c_queue_ctr != NUM_QUEUES)
 //		return 1;
 
-	printf("%s\n", __func__);
+//	printf("%s\n", __func__);
 
 	TEST_NZ(rdma_client_create_mr(client_session->dev->pd));
 
@@ -67,7 +67,7 @@ static int on_connection_client(struct queue *q)
 static int on_event(struct rdma_cm_event *event)
 {
 	struct queue *q = (struct queue *) event->id->context;
-	printf("%s\n", __func__);
+//	printf("%s\n", __func__);
 
 	switch (event->event) {
 		case RDMA_CM_EVENT_ADDR_RESOLVED:

@@ -10,7 +10,7 @@ struct sockaddr_in s_addr;
 int rdma_server_status;
 
 atomic_int wr_check[100];
-
+//1atomic_int wr_check;
 
 //static void *process_server_init(void *arg)
 static void *process_server_init()
@@ -38,7 +38,11 @@ static void *process_receiver(void *arg)
 //              printf("%s: done %d on %d!\n", __func__, i, cpu);
 
                 atomic_fetch_add(&wr_check[cnt], 1);
+//		atomic_fetch_add(&wr_check, 1);
+		printf("%s: done %d and wr_check is %d\n",__func__, cnt, wr_check[cnt]); 
                 cnt++;
+		if(cnt >= 100)
+			break;
         }
 }
 
@@ -49,8 +53,8 @@ static void *process_worker(void *arg)
 
         while (true) {
                 if (!atomic_load(&wr_check[idx]))
-                        continue;
-
+//                        continue;
+			break;
                 printf("worker %d on!\n", idx);
                 idx++;
         }

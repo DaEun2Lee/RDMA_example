@@ -75,6 +75,7 @@ static int on_disconnect(struct queue *q)
 	ibv_dealloc_pd(server_session->dev->pd);
 	free(server_session->dev);
 	server_session->dev = NULL;
+	printf("%s: end of this connection\n", __func__);
 	return 1;
 }
 

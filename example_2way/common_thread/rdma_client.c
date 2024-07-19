@@ -8,21 +8,29 @@ int c_queue_ctr = 0;
 
 char client_memory[PAGE_SIZE]; 
 struct ibv_mr *client_mr;
-
+ 
 extern int rdma_client_status;
 
 static int on_addr_resolved(struct rdma_cm_id *id)
 {
 	struct queue *q = &client_session->queues[c_queue_ctr];
+
 	printf("%s\n", __func__);
+	print_queue(q);
+	printf("%s: client_session\n",__func__);
+//	print_ctrl(client_session);
 
 	id->context = q;
 	q->cm_id = id;
 
+	printf("%s: Change q->cm_id\n",__func__);
+	print_queue(q);
+
 	if (!q->ctrl->dev) 
 		TEST_NZ(rdma_create_device(q));
 	TEST_NZ(rdma_create_queue(q, c_cc[c_queue_ctr++]));
-//	TEST_NZ(rdma_modify_qp(q));
+//	printf("%s: c_cc[c_queue_ctr++]: %q \n", __func__, c_cc[c_queue_ctr++]);
+	TEST_NZ(rdma_modify_qp(q));
 	TEST_NZ(rdma_resolve_route(q->cm_id, CONNECTION_TIMEOUT_MS));
 	return 0;
 }
@@ -32,6 +40,9 @@ static int on_route_resolved(struct queue *q)
 	struct rdma_conn_param param = {};
 
 	printf("%s\n", __func__);
+        print_queue(q);
+        printf("%s: client_session\n",__func__);
+//        print_ctrl(client_session);
 
 	param.qp_num = q->qp->qp_num;
 	param.initiator_depth = 16;
@@ -51,16 +62,24 @@ static int on_connection_client(struct queue *q)
 //		return 1;
 
 	printf("%s\n", __func__);
+        print_queue(q);
+//        printf("%s: client_session\n",__func__);
+//        print_ctrl(client_session);
 
 	TEST_NZ(rdma_client_create_mr(client_session->dev->pd));
+	printf("%s: end of rdma_client_create_mr\n", __func__);
 
 	mr.addr = (uint64_t) client_mr->addr;
 	mr.length = sizeof(struct mr_attr);
 	mr.stag.lkey = client_mr->lkey;
 	memcpy(client_memory, &mr, sizeof(struct mr_attr));
-	
-	TEST_NZ(rdma_recv_wr(&client_session->queues[c_queue_ctr--], &mr));
+
+	TEST_NZ(rdma_recv_wr(&client_session->queues[c_queue_ctr-1], &mr));
+        printf("%s: end of rdma_recv_wr\n",__func__);
+//        print_ctrl(client_session);
 	TEST_NZ(rdma_poll_cq(client_session->queues[c_queue_ctr-1].cq, 1));
+        printf("%s: client_session\n",__func__);
+//        print_ctrl(client_session);
 	return 1;
 }
 
@@ -94,6 +113,9 @@ int start_rdma_client(struct sockaddr_in *c_addr)
 
 	TEST_NZ(rdma_alloc_session(&client_session));
 
+        printf("%s: client_session\n",__func__);
+//        print_ctrl(client_session);
+
 	for (unsigned int i = 0; i < NUM_QUEUES; i++) {
 		c_ec[i] = rdma_create_event_channel();
 		TEST_NZ((c_ec[i] == NULL));
@@ -117,5 +139,7 @@ int start_rdma_client(struct sockaddr_in *c_addr)
 
 struct queue *get_queue_client(int idx)
 {
+        printf("%s: client_session\n",__func__);
+//        print_ctrl(client_session);
 	return &client_session->queues[idx];
 }
